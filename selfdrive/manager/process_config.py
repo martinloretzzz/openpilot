@@ -2,8 +2,9 @@ import os
 
 from cereal import car
 from common.params import Params
+from selfdrive.manager.process import (DaemonProcess, NativeProcess,
+                                       PythonProcess)
 from system.hardware import PC
-from selfdrive.manager.process import PythonProcess, NativeProcess, DaemonProcess
 
 WEBCAM = os.getenv("USE_WEBCAM") is not None
 
@@ -51,6 +52,8 @@ procs = [
   PythonProcess("updated", "selfdrive.updated", enabled=not PC, onroad=False, offroad=True),
   PythonProcess("uploader", "selfdrive.loggerd.uploader", offroad=True),
   PythonProcess("statsd", "selfdrive.statsd", offroad=True),
+
+  PythonProcess("timezoned", "system.timezoned", offroad=True),
 
   NativeProcess("bridge", "cereal/messaging", ["./bridge"], onroad=False, callback=notcar),
   PythonProcess("webjoystick", "tools.joystick.web", onroad=False, callback=notcar),
