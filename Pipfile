@@ -40,6 +40,7 @@ mpld3 = "*"
 
 [packages]
 atomicwrites = "*"
+cantools = "*"
 casadi = {version = "*", markers="platform_system != 'Darwin'"}
 cffi = "*"
 crcmod = "*"
@@ -55,6 +56,9 @@ json-rpc = "*"
 libusb1 = "*"
 nose = "*"
 numpy = "*"
+protobuf = "==3.20.1"
+python-can = "*"
+odrive = "*"
 onnx = "*"
 onnxruntime-gpu = {version = "*", markers="platform_system != 'Darwin'"}
 pillow = "*"

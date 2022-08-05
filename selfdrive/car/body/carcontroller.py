@@ -1,7 +1,6 @@
 import numpy as np
 
 from common.realtime import DT_CTRL
-from selfdrive.car.body import bodycan
 from opendbc.can.packer import CANPacker
 from selfdrive.car.body.values import SPEED_FROM_RPM
 from selfdrive.controls.lib.pid import PIDController
@@ -80,7 +79,7 @@ class CarController():
       torque_l = int(np.clip(self.torque_l_filtered, -MAX_TORQUE, MAX_TORQUE))
 
     can_sends = []
-    can_sends.append(bodycan.create_control(self.packer, torque_l, torque_r, self.frame // 2))
+    # can_sends.append(bodycan.create_control(self.packer, torque_l, torque_r))
 
     new_actuators = CC.actuators.copy()
     new_actuators.accel = torque_l
