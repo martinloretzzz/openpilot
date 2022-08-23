@@ -18,6 +18,10 @@ def logging(started, params, CP: car.CarParams) -> bool:
   return started and run
 
 procs = [
+
+  # NativeProcess("boardd", "selfdrive/boardd", ["./boardd"], enabled=False),
+  PythonProcess("canseriald", "selfdrive.canseriald"),
+
   # due to qualcomm kernel bugs SIGKILLing camerad sometimes causes page table corruption
   NativeProcess("camerad", "system/camerad", ["./camerad"], unkillable=True), #, callback=driverview),
   NativeProcess("clocksd", "system/clocksd", ["./clocksd"]),
@@ -36,7 +40,6 @@ procs = [
   NativeProcess("ui", "selfdrive/ui", ["./ui"], offroad=True, watchdog_max_dt=(5 if (TICI or EON) else None)),
   NativeProcess("soundd", "selfdrive/ui/soundd", ["./soundd"], offroad=True),
   NativeProcess("locationd", "selfdrive/locationd", ["./locationd"]),
-  NativeProcess("boardd", "selfdrive/boardd", ["./boardd"], enabled=False),
   PythonProcess("calibrationd", "selfdrive.locationd.calibrationd"),
   PythonProcess("controlsd", "selfdrive.controls.controlsd"),
   # PythonProcess("deleter", "selfdrive.loggerd.deleter", offroad=True),
