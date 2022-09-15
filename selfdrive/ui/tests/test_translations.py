@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 import json
 import os
+import re
 import shutil
 import unittest
+import xml.etree.ElementTree as ET
 
 from selfdrive.ui.update_translations import TRANSLATIONS_DIR, LANGUAGES_FILE, update_translations
 
 TMP_TRANSLATIONS_DIR = os.path.join(TRANSLATIONS_DIR, "tmp")
+LOCATION_TAG = "<location "
 
 
 class TestTranslations(unittest.TestCase):
@@ -25,16 +28,15 @@ class TestTranslations(unittest.TestCase):
   @staticmethod
   def _read_translation_file(path, file):
     tr_file = os.path.join(path, f"{file}.ts")
-    with open(tr_file, "rb") as f:
-      # fix relative path depth
-      return f.read().replace(b"filename=\"../../", b"filename=\"../")
+    with open(tr_file, "r") as f:
+      # ignore locations when checking if translations are updated
+      lines = [line for line in f.read().splitlines() if
+               not line.strip().startswith(LOCATION_TAG)]
+      return "\n".join(lines)
 
   def test_missing_translation_files(self):
     for name, file in self.translation_files.items():
       with self.subTest(name=name, file=file):
-        if not len(file):
-          self.skipTest(f"{name} translation has no defined file")
-
         self.assertTrue(os.path.exists(os.path.join(TRANSLATIONS_DIR, f"{file}.ts")),
                         f"{name} has no XML translation file, run selfdrive/ui/update_translations.py")
 
@@ -43,9 +45,6 @@ class TestTranslations(unittest.TestCase):
 
     for name, file in self.translation_files.items():
       with self.subTest(name=name, file=file):
-        if not len(file):
-          self.skipTest(f"{name} translation has no defined file")
-
         # caught by test_missing_translation_files
         if not os.path.exists(os.path.join(TRANSLATIONS_DIR, f"{file}.ts")):
           self.skipTest(f"{name} missing translation file")
@@ -59,12 +58,40 @@ class TestTranslations(unittest.TestCase):
   def test_unfinished_translations(self):
     for name, file in self.translation_files.items():
       with self.subTest(name=name, file=file):
-        if not len(file):
-          raise self.skipTest(f"{name} translation has no defined file")
-
         cur_translations = self._read_translation_file(TRANSLATIONS_DIR, file)
-        self.assertTrue(b"<translation type=\"unfinished\">" not in cur_translations,
+        self.assertTrue("<translation type=\"unfinished\">" not in cur_translations,
                         f"{file} ({name}) translation file has unfinished translations. Finish translations or mark them as completed in Qt Linguist")
+
+  def test_vanished_translations(self):
+    for name, file in self.translation_files.items():
+      with self.subTest(name=name, file=file):
+        cur_translations = self._read_translation_file(TRANSLATIONS_DIR, file)
+        self.assertTrue("<translation type=\"vanished\">" not in cur_translations,
+                        f"{file} ({name}) translation file has obsolete translations. Run selfdrive/ui/update_translations.py --vanish to remove them")
+
+  def test_plural_translations(self):
+    """
+      Tests:
+      - that any numerus (plural) translations marked "finished" have all plural forms non-empty
+      - that the correct format specifier is used (%n)
+    """
+    for name, file in self.translation_files.items():
+      with self.subTest(name=name, file=file):
+        tr_xml = ET.parse(os.path.join(TRANSLATIONS_DIR, f"{file}.ts"))
+
+        for context in tr_xml.getroot():
+          for message in context.iterfind("message"):
+            if message.get("numerus") == "yes":
+              translation = message.find("translation")
+              numerusform = [t.text for t in translation.findall("numerusform")]
+
+              # Do not assert finished translations
+              if translation.get("type") == "unfinished":
+                continue
+
+              self.assertNotIn(None, numerusform, "Ensure all plural translation forms are completed.")
+              self.assertTrue(all([re.search("%[0-9]+", t) is None for t in numerusform]),
+                              "Plural translations must use %n, not %1, %2, etc.: {}".format(numerusform))
 
 
 if __name__ == "__main__":
