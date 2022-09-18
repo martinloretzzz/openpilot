@@ -7,6 +7,22 @@ CM_ "To work with the cansimple of the odrive, this file assumes:";
 CM_ "The left axis has a node_id of 0 (commands a appended with _L)";
 CM_ "The right axis has a node_id is 1 (commands a appended with _R) (signal_id offset of 1 << 5 = 32)";
 
+CM_ "IMU";
+
+BO_ 64 Imu_Y: 8 Vector__XXX
+ SG_ Angle_Y : 32|32@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Change_Y : 0|32@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 65 Imu_X: 8 Vector__XXX
+ SG_ Angle_X : 32|32@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Change_X : 0|32@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 66 Imu_Z: 8 Vector__XXX
+ SG_ Angle_Z : 32|32@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Change_Z : 0|32@1+ (1,0) [0|0] "" Vector__XXX
+
+
+CM_ "Left wheel";
 
 BO_ 1 Heartbeat_L: 8 Vector__XXX
  SG_ Controller_Flags : 56|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -98,6 +114,7 @@ BO_ 27 Set_Vel_gains_L: 8 Vector__XXX
  SG_ Vel_Gain : 0|32@1+ (1,0) [0|0] "" Vector__XXX
 
 
+CM_ "Right wheel";
 
 BO_ 33 Heartbeat_R: 8 Vector__XXX
  SG_ Controller_Flags : 56|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -234,3 +251,10 @@ SIG_VALTYPE_ 55 Vbus_Voltage : 1;
 SIG_VALTYPE_ 58 Pos_Gain : 1;
 SIG_VALTYPE_ 59 Vel_Gain : 1;
 SIG_VALTYPE_ 59 Vel_Integrator_Gain : 1;
+
+SIG_VALTYPE_ 64 Angle_Y : 1;
+SIG_VALTYPE_ 64 Change_Y : 1;
+SIG_VALTYPE_ 65 Angle_X : 1;
+SIG_VALTYPE_ 65 Change_X : 1;
+SIG_VALTYPE_ 66 Angle_Z : 1;
+SIG_VALTYPE_ 66 Change_Z : 1;

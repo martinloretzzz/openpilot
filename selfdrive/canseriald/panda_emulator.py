@@ -13,7 +13,6 @@ def gen_peripheral_state(voltage=12, current=0.3, fanSpeedRpm=1e3):
   ps.voltage = voltage * 1e3
   ps.current = current * 1e3
   ps.fanSpeedRpm = fanSpeedRpm
-  ps.usbPowerMode = log.PeripheralState.UsbPowerMode.cdp
   return msg
 
 

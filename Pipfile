@@ -25,7 +25,6 @@ parameterized = "*"
 paramiko = "*"
 pprofile = "*"
 pre-commit = "*"
-pycurl = "*"
 pygame = "*"
 pyprof2calltree = "*"
 pytest = "*"
@@ -46,7 +45,6 @@ tabulate = "*"
 
 [packages]
 atomicwrites = "*"
-cantools = "*"
 casadi = {version = "*", markers="platform_system != 'Darwin'"}
 cffi = "*"
 crcmod = "*"
@@ -63,8 +61,6 @@ libusb1 = "*"
 nose = "*"
 numpy = "*"
 protobuf = "==3.20.1"
-python-can = "*"
-odrive = "*"
 onnx = "*"
 onnxruntime-gpu = {version = "*", markers="platform_system != 'Darwin'"}
 pillow = "*"
@@ -92,6 +88,12 @@ utm = "*"
 websocket_client = "*"
 hatanaka = "==2.4"
 PySide2 = "*"
+python-can = "*"
+cantools = "*"
+pycurl = "*"
 
 [requires]
 python_version = "3.8"
+
+[pipenv]
+allow_prereleases = true

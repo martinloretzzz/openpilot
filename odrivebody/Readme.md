@@ -10,5 +10,12 @@ The following processes are disabled in the manager and have to be started manua
 `cd selfdrive/canseriald`
 `python canseriald.py`
 
-## If Permission denied on /dev/ttyACM0: 
-`sudo chmod 666 /dev/ttyACM0`
+## Serial Ports
+/dev/ttyACM0: IMU/Gyro Sensor
+/dev/ttyACM1: Odrive
+
+### Show connected serial devices
+`dmesg | grep tty`
+
+### Change Permissions for the Serial ports 
+`sudo chmod 666 /dev/ttyACM*`
