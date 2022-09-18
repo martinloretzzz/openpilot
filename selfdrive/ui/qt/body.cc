@@ -35,7 +35,7 @@ void RecordButton::paintEvent(QPaintEvent *event) {
   if (isDown()) {
     accent.setAlphaF(0.7);
   }
-
+  /*
   p.setPen(Qt::NoPen);
   p.setBrush(bg);
   p.drawEllipse(center, 74, 74);
@@ -47,6 +47,7 @@ void RecordButton::paintEvent(QPaintEvent *event) {
   p.setPen(Qt::NoPen);
   p.setBrush(accent);
   p.drawEllipse(center, 22, 22);
+  */
 }
 
 
